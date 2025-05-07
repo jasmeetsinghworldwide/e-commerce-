@@ -56,28 +56,8 @@ function ShoppingHome() {
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
   );
-  //const { featureImageList } = useSelector((state) => state.commonFeature);
-  const featureImageList=[
-    {
-        _id: "68175f96648f107111ca0123",
-        image: bannerOne,
-        createdAt: "2025-05-04T12:37:42.426Z",
-        updatedAt: "2025-05-04T12:37:42.426Z",
-        __v: 0
-    }, {
-      _id: "68175f96648f107111ca01234",
-      image: bannerTwo,
-      createdAt: "2025-05-04T12:37:82.426Z",
-      updatedAt: "2025-05-04T12:37:43.426Z",
-      __v: 0
-  }, {
-    _id: "68175f96648f107111ca012345",
-    image: bannerThree,
-    createdAt: "2025-05-04T12:37:49.426Z",
-    updatedAt: "2025-05-04T12:37:45.426Z",
-    __v: 0
-}
-]
+  const { featureImageList } = useSelector((state) => state.commonFeature);
+
 
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
