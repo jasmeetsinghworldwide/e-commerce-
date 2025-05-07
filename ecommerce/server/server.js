@@ -12,7 +12,9 @@ const shopAddressRouter = require("./routes/shop/address-routes");
 const shopOrderRouter = require("./routes/shop/order-routes");
 const shopSearchRouter = require("./routes/shop/search-routes");
 const shopReviewRouter = require("./routes/shop/review-routes");
+const dotenv = require('dotenv');
 
+dotenv.config();
 const commonFeatureRouter = require("./routes/common/feature-routes");
 
 mongoose
@@ -25,7 +27,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: `${import.meta.env.VITE_API_FRONTEND_URL}`,
+    origin: `${ process.env.VITE_API_FRONTEND_URL}`,
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: [
       "Content-Type",
