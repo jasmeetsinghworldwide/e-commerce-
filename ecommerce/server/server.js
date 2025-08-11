@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const dotenv = require("dotenv");
+
 const authRouter = require("./routes/auth/auth-routes");
 const adminProductsRouter = require("./routes/admin/products-routes");
 const adminOrderRouter = require("./routes/admin/order-routes");
@@ -12,11 +14,12 @@ const shopAddressRouter = require("./routes/shop/address-routes");
 const shopOrderRouter = require("./routes/shop/order-routes");
 const shopSearchRouter = require("./routes/shop/search-routes");
 const shopReviewRouter = require("./routes/shop/review-routes");
-const dotenv = require('dotenv');
 
-dotenv.config();
 const commonFeatureRouter = require("./routes/common/feature-routes");
 
+dotenv.config();
+
+// MongoDB connection
 mongoose
   .connect('mongodb+srv://jasmeetsinghworldwide:Sameerdogra@cluster0.cxyqbjp.mongodb.net/')
   .then(() => console.log("MongoDB connected"))
@@ -25,9 +28,22 @@ mongoose
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// ✅ Allow multiple origins for CORS
+const allowedOrigins = [
+  "http://localhost:5173", // Local
+  "https://e-commerce-phi-red.vercel.app" // Vercel
+];
+
 app.use(
   cors({
-    origin: `${ process.env.VITE_API_FRONTEND_URL}`,
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, origin); // ✅ Send back the same origin
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: [
       "Content-Type",
@@ -42,6 +58,8 @@ app.use(
 
 app.use(cookieParser());
 app.use(express.json());
+
+// Routes
 app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductsRouter);
 app.use("/api/admin/orders", adminOrderRouter);
