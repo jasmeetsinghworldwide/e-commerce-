@@ -22,26 +22,27 @@ dotenv.config();
 // MongoDB connection
 mongoose
   .connect('mongodb+srv://jasmeetsinghworldwide:Sameerdogra@cluster0.cxyqbjp.mongodb.net/')
-  .then(() => console.log("MongoDB connected"))
-  .catch((error) => console.log(error));
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch((error) => console.log("❌ MongoDB connection error:", error));
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ✅ Allow multiple origins for CORS
+// ✅ Allow multiple origins for CORS (including any Vercel domain)
 const allowedOrigins = [
-  "http://localhost:5173", // Local
-  "https://e-commerce-phi-red.vercel.app" // Vercel
+  "http://localhost:5173", // Local development
+  /\.vercel\.app$/,        // Any Vercel deployment
+  "https://e-commerce-phi-red.vercel.app" // Your custom Vercel domain (if you keep it)
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, origin); // ✅ Send back the same origin
-      }
+      if (!origin) return callback(null, true); // Allow server-to-server or curl requests
+      const isAllowed = allowedOrigins.some(o =>
+        typeof o === "string" ? o === origin : o.test(origin)
+      );
+      if (isAllowed) return callback(null, true);
       return callback(new Error("Not allowed by CORS"));
     },
     methods: ["GET", "POST", "DELETE", "PUT"],
@@ -73,4 +74,4 @@ app.use("/api/shop/review", shopReviewRouter);
 
 app.use("/api/common/feature", commonFeatureRouter);
 
-app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
